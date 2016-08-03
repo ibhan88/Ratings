@@ -41,10 +41,6 @@ def show_register_form():
     for user in existing_users:
         emails.append(user.email)
 
-    print "#################### EMAILS ######################"
-    print emails
-    print "##################################################"
-
     return render_template("register_form.html", emails=emails)
     # if methods == "GET":
     #     return render_template("register_form.html")
@@ -55,11 +51,21 @@ def show_register_form():
 @app.route('/user_id_check')
 def check_user_id():
 
-    new_email = request.form.get("email")
-    emails = User.query.filter(User.email!=None)
+    new_email = request.args.get("email")
+    print "**********new_email******************************"
+    print new_email
+    print "****************************************"
+    emails = User.query.filter(User.email==new_email).all()
+    print "************emails****************************"
+    print emails
+    print "****************************************"
     #check password too
-    if new_email in emails:
-        return "This email is already registered."
+
+    if emails:
+        print "TRUE"
+        return "True"
+    else:
+        return "False"
 
 
 @app.route('/register-confirmation', methods=["POST"])
