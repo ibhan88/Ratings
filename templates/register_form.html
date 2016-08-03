@@ -3,11 +3,21 @@
 
 <h1>New User Registration</h1>
 
-<form action="/register" method="POST">
-    <label>Email: <input type="text" name="email"><br><br></label>
+<form action="/register-confirmation" id="registrationform" method="POST">
+    <label>Email: <input type="text" id="email" name="email"><br><br></label>
     <label>Password: <input type="text" name="password"><br><br></label>
     <label>Age: <input type="number" min=0 name="age"><br><br></label>
     <label>Zipcode: <input type="number" min=0 name="zipcode"><br><br></label>
     <label><input type="submit" value="Register"></label>
 </form>
+<script>
+    $('#registrationform').on('submit', function (evt) {
+        $get()
+        debugger;
+        if (newEmail in {{ emails }}) {
+            alert("This email is already registered.");
+            evt.preventDefault();
+        }
+    });
+</script>
 {% endblock %}
