@@ -49,13 +49,27 @@ def login():
 
     emails = User.query.filter(User.email==email, User.password==password).all()
 
-    # if emails:
-        
+    if session["current_user"]:
+        flash("You are already logged in.")
+        if emails:
+            session["current_user"] = email
+            flash("Logged in as %s" % email)
+            print session
+            return redirect("/")
+        else:
+            flash("That email and password combination is not in the system.")
+            return redirect("/login_form")
 
-    # else:
-        
-    return redirect("/")
 
+@app.route('/logout')
+def logout():
+   # remove the username from the session if it is there
+   session.pop("current_user", None)
+   print "****Popped session*******"
+   print session
+   print "*******************"
+   flash("Logged out.")
+   return redirect("/")
 
 
 @app.route('/register')
@@ -69,17 +83,10 @@ def show_register_form():
 def check_user_id():
 
     new_email = request.args.get("email")
-    print "**********new_email******************************"
-    print new_email
-    print "****************************************"
     emails = User.query.filter(User.email==new_email).all()
-    print "************emails****************************"
-    print emails
-    print "****************************************"
     #check password too
 
     if emails:
-        print "TRUE"
         return "True"
     else:
         return "False"
