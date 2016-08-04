@@ -3,7 +3,7 @@
 
 <h1>New User Registration</h1>
 
-<form id="registrationform">
+<form action='/register-confirmation' id="registrationform" method="POST">
     <label>Email: <input type="text" id="email" name="email"><br><br></label>
     <label>Password: <input type="text" name="password"><br><br></label>
     <label>Age: <input type="number" min=0 name="age"><br><br></label>
@@ -11,35 +11,45 @@
     <label><input type="submit" value="Register"></label>
 </form>
 <script>
+
+
+    // function formToObject() {
+    //     var formArray = $("#registrationform").serializeArray();
+    //     var payload = {};
+    //     for (var i = 0; i < formArray.length; i++) {
+    //         payload[formArray[i].name] = formArray[i].value;
+    //     }
+    //     console.log(payload);
+    //     return payload;
+    // } 
+
+    var shouldCheck = true;
     function showEmailAlert(result) {
         if (result == "True") {
             alert("This email is already registered.")
         }
         else {
-            // var email = {
-            //     "email": $("#email").val()
-            // };
-            console.log("HELLLLLOOOOOOOOOO")
-            var payload = $("#registrationform").serialize()
-            console.log(payload)
-            $.post("/register-confirmation", 
-                    payload 
-                    );
-            }
+            console.log("HELLLLLOOOOOOOOOO");
+            shouldCheck = false;
+            $("#registrationform").submit();
         }
+    }
     
 
     function checkEmail(evt) {
-        evt.preventDefault();
+        
 
         var email = {
             "email": $("#email").val()
         };
-            
-        $.get("/user_id_check", 
-                email, 
-                showEmailAlert
-                );
+        
+        if (shouldCheck == true) {
+            evt.preventDefault();
+            $.get("/user_id_check", 
+                    email, 
+                    showEmailAlert
+                    );
+        }
     }
 
     $("#registrationform").on("submit", checkEmail);

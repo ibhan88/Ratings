@@ -32,21 +32,38 @@ def user_list():
 
     return render_template("user_list.html", users=users)
 
+
+@app.route('/login_form')
+def login_form():
+    """Show login form"""
+
+    return render_template("login_form.html")
+
+
+@app.route('/login', methods=["POST"])
+def login():
+    """Login"""
+
+    email = request.form.get("email")
+    password = request.form.get("password")
+
+    emails = User.query.filter(User.email==email, User.password==password).all()
+
+    # if emails:
+        
+
+    # else:
+        
+    return redirect("/")
+
+
+
 @app.route('/register')
 def show_register_form():
     """Shows registration form."""
 
-    existing_users = User.query.filter(User.email!=None).all()
-    emails = []   
-    for user in existing_users:
-        emails.append(user.email)
+    return render_template("register_form.html")
 
-    return render_template("register_form.html", emails=emails)
-    # if methods == "GET":
-    #     return render_template("register_form.html")
-    # else:
-    #     #Some CODE
-    #     return redirect("/")
 
 @app.route('/user_id_check')
 def check_user_id():
@@ -71,7 +88,7 @@ def check_user_id():
 @app.route('/register-confirmation', methods=["POST"])
 def show_register_confirmation():
     """Shows registration confirmation."""
-
+    print "!!!!!!!!!!!!!!!!!!!!HERE!!!!!!!!!!!!!!!!!!!!!"
     email = request.form.get("email")
     password = request.form.get("password")
     age = request.form.get("age")
