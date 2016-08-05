@@ -26,13 +26,6 @@ def index():
     return render_template("homepage.html")
 
 
-@app.route('/users')
-def user_list():
-    """Show list of users."""
-
-    return render_template("user_list.html", users=users)
-
-
 @app.route('/login_form')
 def login_form():
     """Show login form"""
@@ -49,16 +42,14 @@ def login():
 
     emails = User.query.filter(User.email==email, User.password==password).all()
 
-    if session["current_user"]:
-        flash("You are already logged in.")
-        if emails:
-            session["current_user"] = email
-            flash("Logged in as %s" % email)
-            print session
-            return redirect("/")
-        else:
-            flash("That email and password combination is not in the system.")
-            return redirect("/login_form")
+    if emails:
+        session["current_user"] = email
+        flash("Logged in as %s" % email)
+        print session
+        return redirect("/")
+    else:
+        flash("That email and password combination is not in the system.")
+        return redirect("/login_form")
 
 
 @app.route('/logout')
@@ -71,6 +62,58 @@ def logout():
    flash("Logged out.")
    return redirect("/")
 
+@app.route('/users')
+def user_list():
+    """Show list of users."""
+
+    users = User.query.all()
+
+    return render_template("user_list.html", users=users)
+
+
+@app.route('/users/<user_id>')
+def show_user_info(user_id):
+    """Show information about user."""
+
+    user = User.query.get(user_id)
+
+    return render_template("user_info.html", user=user)
+
+@app.route('/movies')
+def movie_list():
+    """Show list of movies."""
+
+    movies = Movie.query.order_by(Movie.title).all()
+    print movies
+
+    return render_template("movie_list.html", movies=movies)
+
+
+@app.route('/movies/<movie_id>')
+def show_movie_info(movie_id):
+    """Show information about movie."""
+
+    movie = Movie.query.get(movie_id)
+
+    return render_template("movie_info.html", movie=movie)
+
+@app.route('/movie_rating')
+def update_or_add_rating():
+    """Adding or updating movie rating."""
+
+    rating = request.args.get("rating")
+    movie_id = request.args.get("movie_id")
+
+    email = session["current_user"]
+    user = User.query.filter(email=email)
+
+    # to check if user has previously rated the movie
+    # if rating exists, update the rating.
+    # otherwise, add new rating.
+    # if user.rating.movie_id == movie_id:
+
+
+    return redirect("/movies")
 
 @app.route('/register')
 def show_register_form():

@@ -12,17 +12,8 @@
 <h2>Users</h2>
 <p><a href="/users">View all users</a></p>
 <br><br>
-
+<form action="/logout">
 <label><input type="submit" id="logout-button" value="Logout"></label>
-
-<script>
-    $("#logout-button").on("click", function(evt) {
-        $.get("/logout", function(result) {
-            debugger;
-            console.log("Logged out.");
-        });
-    });
-</script>
-
+</form>
 
 {% endblock %}
